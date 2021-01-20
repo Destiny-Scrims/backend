@@ -3,19 +3,19 @@ from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render
 from uuid import uuid4
 import requests
+from keys import client_id, client_secret, API_KEY
 
 # Create your views here.
 
-AUTH_URL = 'https://www.bungie.net/en/OAuth/Authorize?client_id=35285&response_type=code'
+AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&response_type=code'
 
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 
 code = ''
-client_id = '35285'
-client_secret = 'LxlxbBrykmSGzq23sECKTFYew7W2.c.0TAa.frP9x4U'
+
 
 def get_token(code):
-    HEADERS = {"X-API-Key":'4edfaa1b570745588f516307bdc40e43'}
+    HEADERS = {"X-API-Key": API_KEY}
     post_data = {'code': code}
     response = requests.post(access_token_url, json=post_data, headers=HEADERS)
 
@@ -31,9 +31,9 @@ def callback(request):
 
     HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
-        "X-API-Key":'4edfaa1b570745588f516307bdc40e43',
-        "client_id": '35285',
-        "client_secret": 'LxlxbBrykmSGzq23sECKTFYew7W2.c.0TAa.frP9x4U',
+        "X-API-Key": API_KEY,
+        "client_id": client_id,
+        "client_secret": client_secret,
         "grant_type": 'authorization_code'
         }
     post_data = f'grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}'
