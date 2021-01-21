@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render
 from uuid import uuid4
 import requests
+import datetime
 from keys import client_id, client_secret, API_KEY
 
 # Create your views here.
@@ -42,6 +43,18 @@ def callback(request):
     print(f'here is your response:\n{response.status_code}')
     print(f'here is your response:\n{response.text}')
     print(f'here is your response:\n{response.json()}')
+    print(type(response.json()))
+    access_token = response.json()['access_token']
+    expires_in = response.json()['expires_in']
+    refresh_token = response.json()['refresh_token']
+    membership_id = response.json()['membership_id']
+    print(f'this is your access token: {access_token}')
+    print(f'access token expires in: {expires_in}')
+    print(f'this is your refresh token: {refresh_token}')
+    print(f'this is your membership id: {membership_id}')
+    a = datetime.datetime.now()
+    b = a + datetime.timedelta(0, expires_in)
+    print(f'your access token will expire at this time: {b}')
 
     return render(request, 'callback.html')
 
