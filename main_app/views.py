@@ -30,11 +30,8 @@ def save_session(token):
     oauth_session.headers["Authorization"] = 'Bearer ' + token
     access_token = "Bearer " + token
 
-def index(request):
-    
-
-    url = AUTH_URL # + urlencode(state_params)
-    return render(request, 'index.html', { 'url': url })
+def auth(request):
+    return HttpResponseRedirect(AUTH_URL)
 
 def callback(request):
     print(f"Info I want\n---------------------\n{request.GET.get('code')}")
@@ -42,7 +39,7 @@ def callback(request):
     code = request.GET.get('code')
     print(f'here is your code: {code}')
 
-    access_token = ''
+    # access_token = ''
 
     HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -50,7 +47,7 @@ def callback(request):
         "client_id": client_id,
         "client_secret": client_secret,
         "grant_type": 'authorization_code',
-        "Authorization": access_token
+        # "Authorization": 'Bearer ' + access_token
         }
     post_data = f'grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}'
     response = requests.post(access_token_url, data=post_data, headers=HEADERS)
@@ -70,21 +67,20 @@ def callback(request):
     a = datetime.datetime.now()
     expiry_date = a + datetime.timedelta(0, expires_in)
 
+    HEADERS['Authorization'] = 'Bearer ' + access_token
     
-    user = User()
-    user.access_token = access_token
-    user.refresh_token = refresh_token
-    user.expiry_date = expiry_date
-    user.member_id = membership_id
-    user.save()
+    # user = User()
+    # user.access_token = access_token
+    # user.refresh_token = refresh_token
+    # user.expiry_date = expiry_date
+    # user.member_id = membership_id
+    # user.save()
+
+    res = requests.get('https://www.bungie.net/Platform/User/GetCurrentBungieNetUser/', headers=HEADERS)
 
 
-    print(f'your access token will expire at this time: {expiry_date}')
-    save_session(access_token)
-    res = session.get('https://www.bungie.net/Platform/User/GetBungieNetUser/')
-    print(f'this is your bungie user: {res.text}')
-
-
+    print(f'bungie user response: {res.text}')
+  
     return render(request, 'callback.html')
 
 
