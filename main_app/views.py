@@ -6,6 +6,8 @@ from uuid import uuid4
 import requests
 import datetime
 from keys import client_id, client_secret, API_KEY
+from .models import User
+
 
 # Create your views here.
 
@@ -14,7 +16,6 @@ AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&res
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 
 code = ''
-
 
 
 
@@ -30,6 +31,8 @@ def save_session(token):
     access_token = "Bearer " + token
 
 def index(request):
+    
+
     url = AUTH_URL # + urlencode(state_params)
     return render(request, 'index.html', { 'url': url })
 
@@ -65,11 +68,15 @@ def callback(request):
     print(f'this is your refresh token: {refresh_token}')
     print(f'this is your membership id: {membership_id}')
     a = datetime.datetime.now()
-    b = a + datetime.timedelta(0, expires_in)
-    print(f'your access token will expire at this time: {b}')
-    save_session(access_token)
-    res = session.get('https://www.bungie.net/Platform/User/GetBungieNetUser/')
-    print(f'this is your bungie user: {res.text}')
+    expiry_date = a + datetime.timedelta(0, expires_in)
+    
+    user = User()
+    user.access_token = access_token
+    user.refresh_token = refresh_token
+    user.expiry_date = expiry_date
+    user.member_id = membership_id
+    user.save()
+
 
     return render(request, 'callback.html')
 
