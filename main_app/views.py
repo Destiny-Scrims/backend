@@ -69,6 +69,7 @@ def callback(request):
     print(f'this is your membership id: {membership_id}')
     a = datetime.datetime.now()
     expiry_date = a + datetime.timedelta(0, expires_in)
+
     
     user = User()
     user.access_token = access_token
@@ -76,6 +77,12 @@ def callback(request):
     user.expiry_date = expiry_date
     user.member_id = membership_id
     user.save()
+
+
+    print(f'your access token will expire at this time: {expiry_date}')
+    save_session(access_token)
+    res = session.get('https://www.bungie.net/Platform/User/GetBungieNetUser/')
+    print(f'this is your bungie user: {res.text}')
 
 
     return render(request, 'callback.html')
