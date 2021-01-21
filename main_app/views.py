@@ -23,27 +23,11 @@ code = ''
 def index(request):
     return render(request, 'index.html', {'url': AUTH_URL})
 
-def get_token(code):
-    HEADERS = {"X-API-Key": API_KEY}
-    post_data = {'code': code}
-    response = requests.post(access_token_url, json=post_data, headers=HEADERS)
-
-def save_session(token):
-    oauth_session = requests.Session()
-    oauth_session.headers["X-API-Key"] = API_KEY
-    oauth_session.headers["Authorization"] = 'Bearer ' + token
-    access_token = "Bearer " + token
-
 def auth(request):
     return HttpResponseRedirect(AUTH_URL)
 
 def callback(request):
-    print(f"Info I want\n---------------------\n{request.GET.get('code')}")
-
     code = request.GET.get('code')
-    print(f'here is your code: {code}')
-
-    # access_token = ''
 
     HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -51,34 +35,18 @@ def callback(request):
         "client_id": client_id,
         "client_secret": client_secret,
         "grant_type": 'authorization_code',
-        # "Authorization": 'Bearer ' + access_token
         }
     post_data = f'grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}'
     response = requests.post(access_token_url, data=post_data, headers=HEADERS)
 
-    print(f'here is your response:\n{response.status_code}')
-    print(f'here is your response:\n{response.text}')
-    print(f'here is your response:\n{response.json()}')
-    print(type(response.json()))
     access_token = response.json()['access_token']
     expires_in = response.json()['expires_in']
     refresh_token = response.json()['refresh_token']
     membership_id = response.json()['membership_id']
-    print(f'this is your access token: {access_token}')
-    print(f'access token expires in: {expires_in}')
-    print(f'this is your refresh token: {refresh_token}')
-    print(f'this is your membership id: {membership_id}')
     a = datetime.datetime.now()
     expiry_date = a + datetime.timedelta(0, expires_in)
 
     HEADERS['Authorization'] = 'Bearer ' + access_token
-    
-    # user = User()
-    # user.access_token = access_token
-    # user.refresh_token = refresh_token
-    # user.expiry_date = expiry_date
-    # user.member_id = membership_id
-    # user.save()
 
     res = requests.get('https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser//', headers=HEADERS)
 
@@ -93,17 +61,21 @@ def callback(request):
 
     # member_list = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
 
-    print(f'this is the users displayName {displayName}')
-    print(f'this is the users membershipId {membershipId}')
-    print(f'this is the users membershipType {membershipType}')
-    print(f'this is the users groupId {groupId}')
-    print(f'this is the users groupName {groupName}')
-    # print(f'this is the users membershipType {membershipType}')
-
-    # print(f'bungie user response: ')
-    # pp.pprint(info.json())
-    # print(f'bungie members of group response: ')
     # pp.pprint(member_list.json())
+
+    print(expiry_date)
+        
+    user = User()
+    user.access_token = access_token
+    user.refresh_token = refresh_token
+    user.expiry_date = expiry_date
+    user.member_id = membership_id
+    user.displayName = displayName
+    user.membershipId = membershipId
+    user.membershipType = membershipType
+    user.groupId = groupId
+    user.groupName = groupName
+    user.save()
   
     return render(request, 'callback.html')
 
