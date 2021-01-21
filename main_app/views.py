@@ -3,10 +3,13 @@ from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
 from django.shortcuts import render
 from django.contrib import sessions
 from uuid import uuid4
+import pprint
 import requests
 import datetime
 from keys import client_id, client_secret, API_KEY
 from .models import User
+
+pp = pprint.PrettyPrinter(indent=4)
 
 
 # Create your views here.
@@ -17,7 +20,8 @@ access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 
 code = ''
 
-
+def index(request):
+    return render(request, 'index.html', {'url': AUTH_URL})
 
 def get_token(code):
     HEADERS = {"X-API-Key": API_KEY}
@@ -76,10 +80,30 @@ def callback(request):
     # user.member_id = membership_id
     # user.save()
 
-    res = requests.get('https://www.bungie.net/Platform/User/GetCurrentBungieNetUser/', headers=HEADERS)
+    res = requests.get('https://www.bungie.net/Platform/User/GetMembershipsForCurrentUser//', headers=HEADERS)
 
+    displayName = res.json()['Response']['bungieNetUser']['displayName']
+    membershipId = res.json()['Response']['destinyMemberships'][0]['membershipId']
+    membershipType = res.json()['Response']['destinyMemberships'][0]['membershipType']
 
-    print(f'bungie user response: {res.text}')
+    info = requests.get(f'https://www.bungie.net/Platform/GroupV2/User/{membershipType}/{membershipId}/0/1/', headers=HEADERS)
+
+    groupId = info.json()['Response']['results'][0]['group']['groupId']
+    groupName = info.json()['Response']['results'][0]['group']['name']
+
+    # member_list = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
+
+    print(f'this is the users displayName {displayName}')
+    print(f'this is the users membershipId {membershipId}')
+    print(f'this is the users membershipType {membershipType}')
+    print(f'this is the users groupId {groupId}')
+    print(f'this is the users groupName {groupName}')
+    # print(f'this is the users membershipType {membershipType}')
+
+    # print(f'bungie user response: ')
+    # pp.pprint(info.json())
+    # print(f'bungie members of group response: ')
+    # pp.pprint(member_list.json())
   
     return render(request, 'callback.html')
 
