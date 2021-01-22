@@ -1,0 +1,9 @@
+html, body {
+    background:rgb(18, 23, 28);
+    background-size: cover;
+}
+
+h2 {
+    color: aquamarine;
+    background:  rgb(18, 23, 28);
+}
