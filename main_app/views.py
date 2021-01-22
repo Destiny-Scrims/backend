@@ -1,5 +1,5 @@
 from django.utils.http import urlencode
-from django.http import HttpResponseRedirect, HttpRequest, JsonResponse
+from django.http import HttpResponseRedirect, HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib import sessions
 from uuid import uuid4
@@ -78,7 +78,11 @@ def callback(request):
             'groupName': groupName
         }
     )   
-  
+    request.session['member_id'] = membership_id
     return HttpResponseRedirect('/')
+
+def access_session(request):
+    if request.session.get('member_id'):
+        return HttpResponse(request.session.get('member_id'))
 
 
