@@ -91,3 +91,10 @@ def access_session(request):
         return HttpResponse(request.session.get('member_id'))
 
 
+def logout(request):
+    try:
+        del request.session['member_id']
+        del request.session['displayName']
+    except KeyError:
+        pass
+    return HttpResponseRedirect('/') 
