@@ -21,7 +21,11 @@ access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 code = ''
 
 def index(request):
-    return render(request, 'index.html', { 'url': AUTH_URL })
+    if request.session.get('displayName'):
+        displayName = request.session.get('displayName')
+        return render(request, 'index.html', { 'displayName': displayName })
+    else:
+        return render(request, 'index.html', { 'url': AUTH_URL })
 
 def auth(request):
     return HttpResponseRedirect(AUTH_URL)
@@ -79,6 +83,7 @@ def callback(request):
         }
     )   
     request.session['member_id'] = membership_id
+    request.session['displayName'] = displayName
     return HttpResponseRedirect('/')
 
 def access_session(request):
