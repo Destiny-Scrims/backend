@@ -7,7 +7,11 @@
 </head>
 <body>
     <div>
-        <h2><a href="{{ url }} " >Authenticate with Bungie</a></h2></br></br>
+        {% if user %}
+        <h2><a href="{{ url }}" >Authenticate with Bungie</a></h2></br></br>
+        {% else %}
+        <h2>Welcome back {{ user.displayName }}</h2>
+        {% endif %}
     </div>
 </body>
 </html>

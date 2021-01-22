@@ -21,7 +21,7 @@ access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 code = ''
 
 def index(request):
-    return render(request, 'index.html', {'url': AUTH_URL})
+    return render(request, 'index.html', { 'url': AUTH_URL })
 
 def auth(request):
     return HttpResponseRedirect(AUTH_URL)
@@ -64,19 +64,21 @@ def callback(request):
     # pp.pprint(member_list.json())
 
     print(expiry_date)
-        
-    user = User()
-    user.access_token = access_token
-    user.refresh_token = refresh_token
-    user.expiry_date = expiry_date
-    user.member_id = membership_id
-    user.displayName = displayName
-    user.membershipId = membershipId
-    user.membershipType = membershipType
-    user.groupId = groupId
-    user.groupName = groupName
-    user.save()
+
+    User.objects.get_or_create(
+        member_id = membership_id,
+        defaults = {
+            'access_token': access_token,
+            'refresh_token': refresh_token,
+            'expiry_date': expiry_date,
+            'displayName': displayName,
+            'membershipId': membershipId,
+            'membershipType': membershipType,
+            'groupId': groupId,
+            'groupName': groupName
+        }
+    )   
   
-    return render(request, 'callback.html')
+    return HttpResponseRedirect('/')
 
 
