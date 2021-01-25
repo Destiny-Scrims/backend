@@ -2,12 +2,14 @@ from django.utils.http import urlencode
 from django.http import HttpResponseRedirect, HttpRequest, JsonResponse, HttpResponse
 from django.shortcuts import render
 from django.contrib import sessions
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.contrib.auth.forms import AuthenticationForm
 from uuid import uuid4
 import pprint
 import requests
 import datetime
 from keys import client_id, client_secret, API_KEY
-from .models import User
+from .models import User, Tournament, Team
 
 pp = pprint.PrettyPrinter(indent=4)
 
@@ -98,3 +100,15 @@ def logout(request):
     except KeyError:
         pass
     return HttpResponseRedirect('/') 
+
+def tourney_index(request):
+    return render(request, 'tourney/index.html')
+
+def tourney_show(request):
+    return render(request, 'tourney/show.html')
+
+def tourney_create(request):
+    if request.session.get('member_id'):
+        return render(request, 'tourney/create.html')
+    else:
+        return HttpResponseRedirect('/') 

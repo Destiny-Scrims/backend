@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% if displayName %}
+    <h2>Welcome back {{ displayName }}</h2>
+    {% else %}
+    <h2><a href="{{ url }}" >Authenticate with Bungie</a></h2></br></br>
+    {% endif %}
+{% endblock %}
