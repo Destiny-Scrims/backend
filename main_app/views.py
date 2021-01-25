@@ -5,6 +5,7 @@ from django.contrib import sessions
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.forms import AuthenticationForm
 from uuid import uuid4
+import random
 import pprint
 import requests
 import datetime
@@ -21,6 +22,7 @@ AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&res
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 
 code = ''
+
 
 def index(request):
     if request.session.get('displayName'):
@@ -130,7 +132,7 @@ def tourney_teams(request):
         member_list.sort()
 
         numTeams = int(request.GET.get('numTeams'))
-        num_range = range(numTeams)
+        num_range = range(numTeams*3)
         print('what you want is below this line')
         print(type(numTeams))
         print(f'numteams is a {type(numTeams)} with the value: {numTeams}')
@@ -147,7 +149,21 @@ def tourney_teams_set(request):
         for key, value in request.POST.items():
             player_list.append(value)
         player_list = player_list[1:-1]
-        print(player_list)
+        random_player_list = []
+        while len(player_list) > 0:
+            random_index = random.randint(0, len(player_list)-1)
+            random_player_list.append(player_list[random_index])
+            player_list.pop(random_index)
+        teams = []
+        for i in range(numTeams):
+            team = {
+                'player1': random_player_list[i*3],
+                'player2': random_player_list[i*3+1],
+                'player3': random_player_list[i*3+2]
+            }
+            teams.append(team)
+        for team in teams:
+            print(team)
         Tournament.objects.create(
             member_id = member_id,
             numTeams = numTeams

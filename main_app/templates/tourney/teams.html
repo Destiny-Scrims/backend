@@ -2,29 +2,16 @@
 {% block content %}
     <form action="/tourney/create/teams/set" method="POST">
         {% csrf_token %}
-        {% for i in num_range %}
-            <div class="form-group">
-                <h3>Team {{i}}</h3>
-                <label for="team{{i}}_player0">Player 0</label>
+        <div class="form-group">
+            {% for i in num_range %}
+                <label for="player{{i}}">Player {{i}}</label>
                 <select class="form-control" id="{{i}}" name="team{{i}}_player0">
                 {% for member in member_list %}
                     <option value="{{member}}">{{member}}</option>
                 {% endfor %}
                 </select>
-                <label for="team{{i}}_player1">Player 1</label>
-                <select class="form-control" id="{{i}}" name="team{{i}}_player1">
-                {% for member in member_list %}
-                    <option value="{{member}}">{{member}}</option>
-                {% endfor %}
-                </select>
-                <label for="team{{i}}_player2">Player 2</label>
-                <select class="form-control" id="{{i}}" name="team{{i}}_player2">
-                {% for member in member_list %}
-                    <option value="{{member}}">{{member}}</option>
-                {% endfor %}
-                </select>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
         <input type="hidden" id='numTeams' name='numTeams' value='{{ numTeams }}'>
         <input class="btn btn-primary" type="submit" value="Submit">
     </form>
