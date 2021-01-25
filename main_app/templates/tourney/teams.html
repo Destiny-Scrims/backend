@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form action="">
+    <form action="/tourney/create/teams/set" method="POST">
         {% csrf_token %}
         {% for i in num_range %}
             <div class="form-group">
@@ -22,5 +22,7 @@
                 </select>
             </div>
         {% endfor %}
+        <input type="hidden" id='numTeams' name='numTeams' value='{{ numTeams }}'>
+        <input class="btn btn-primary" type="submit" value="Submit">
     </form>
 {% endblock %}

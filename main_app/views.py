@@ -104,7 +104,7 @@ def logout(request):
 def tourney_index(request):
     return render(request, 'tourney/index.html')
 
-def tourney_show(request):
+def tourney_show(request, tourney_id):
     return render(request, 'tourney/show.html')
 
 def tourney_create(request):
@@ -134,7 +134,22 @@ def tourney_teams(request):
         print('what you want is below this line')
         print(type(numTeams))
         print(f'numteams is a {type(numTeams)} with the value: {numTeams}')
-        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list })
+        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams })
+    else:
+        return HttpResponseRedirect('/') 
+
+def tourney_teams_set(request):
+    if request.session.get('member_id'):
+        member_id = request.session.get('member_id')
+        
+        numTeams = int(request.POST.get('numTeams'))
+        Tournament.objects.create(
+            member_id = member_id,
+            numTeams = numTeams
+        )
+        print(Tournament.objects.get)
+        tourney_id = 1
+        return HttpResponseRedirect('/tourney/' + str(tourney_id))
     else:
         return HttpResponseRedirect('/') 
 
