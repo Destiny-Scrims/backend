@@ -109,12 +109,23 @@ def tourney_show(request):
 
 def tourney_create(request):
     if request.session.get('member_id'):
-        return render(request, 'tourney/create.html')
+        HEADERS = {
+        "Content-Type": 'application/x-www-form-urlencoded',
+        "X-API-Key": API_KEY,
+        "client_id": client_id,
+        "client_secret": client_secret,
+        
+        }
+        info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
+        member_list = info.json()['Response']['results']
+        return render(request, 'tourney/create.html', { 'list': member_list })
     else:
         return HttpResponseRedirect('/') 
 
 def tourney_teams(request):
     if request.session.get('member_id'):
-        return render(request, 'tourney/teams.html')
+        numTeams = request.POST.get('numTeams')
+        return render(request, 'tourney/teams.html', {'numTeams': numTeams })
     else:
         return HttpResponseRedirect('/') 
+

@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<form action="{% url 'tourney_teams' numTeams %}" method="post">
-    {% csrf_token %}
-    <label for="numTeams">Number of Teams</label>
-    <input type="number" value="" id='numTeams' name="numTeams">
-    <input type="submit" value="Submit">
-</form>
+    {% for member in list %}
+    
+    <button class='btn btn-primary'>{{ member.destinyUserInfo.displayName }}</button>
+    {% endfor %}
+
+    <form action="/tourney/create/teams" >
+        {% csrf_token %}
+        <label for="numTeams">Number of Teams</label>
+        <input type="number" value="" id='numTeams' name="numTeams">
+        <input type="submit" value="Submit">
+    </form>
 {% endblock %}
