@@ -4,18 +4,21 @@
         {% csrf_token %}
         {% for i in num_range %}
             <div class="form-group">
-                <label for="exampleFormControlSelect1">Team {{i}}</label>
-                <select class="form-control" id="{{i}}">
+                <h3>Team {{i}}</h3>
+                <label for="team{{i}}_player0">Player 0</label>
+                <select class="form-control" id="{{i}}" name="team{{i}}_player0">
                 {% for member in member_list %}
                     <option value="{{member}}">{{member}}</option>
                 {% endfor %}
                 </select>
-                <select class="form-control" id="{{i}}">
+                <label for="team{{i}}_player1">Player 1</label>
+                <select class="form-control" id="{{i}}" name="team{{i}}_player1">
                 {% for member in member_list %}
                     <option value="{{member}}">{{member}}</option>
                 {% endfor %}
                 </select>
-                <select class="form-control" id="{{i}}">
+                <label for="team{{i}}_player2">Player 2</label>
+                <select class="form-control" id="{{i}}" name="team{{i}}_player2">
                 {% for member in member_list %}
                     <option value="{{member}}">{{member}}</option>
                 {% endfor %}

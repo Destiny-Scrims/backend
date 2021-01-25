@@ -143,6 +143,10 @@ def tourney_teams_set(request):
         member_id = request.session.get('member_id')
         
         numTeams = int(request.POST.get('numTeams'))
+        player_list = []
+        for key, value in request.POST.items():
+            player_list.append(value)
+        print(player_list)
         Tournament.objects.create(
             member_id = member_id,
             numTeams = numTeams
@@ -151,5 +155,5 @@ def tourney_teams_set(request):
         tourney_id = 1
         return HttpResponseRedirect('/tourney/' + str(tourney_id))
     else:
-        return HttpResponseRedirect('/') 
+        return HttpResponseRedirect('/tourney/index') 
 
