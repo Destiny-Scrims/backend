@@ -9,7 +9,7 @@ import random
 import pprint
 import requests
 import datetime
-from keys import client_id, client_secret, API_KEY
+from keys import client_id, client_secret, API_KEY, CHALLONGE_USERNAME, CHALLONGE_API_KEY
 from .models import User, Tournament, Team
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -176,7 +176,6 @@ def tourney_teams_set(request):
         new_tournament_info = Tournament.objects.get(
             teams = teams
         )
-        print(new_tournament_info.id)
         return HttpResponseRedirect('/tourney/' + str(new_tournament_info.id))
     else:
         return HttpResponseRedirect('/tourney/index') 
