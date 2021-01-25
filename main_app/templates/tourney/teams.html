@@ -1,1 +1,26 @@
-{{ numTeams }}
+{% extends 'base.html' %}
+{% block content %}
+    <form action="">
+        {% csrf_token %}
+        {% for i in num_range %}
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">Team {{i}}</label>
+                <select class="form-control" id="{{i}}">
+                {% for member in member_list %}
+                    <option value="{{member}}">{{member}}</option>
+                {% endfor %}
+                </select>
+                <select class="form-control" id="{{i}}">
+                {% for member in member_list %}
+                    <option value="{{member}}">{{member}}</option>
+                {% endfor %}
+                </select>
+                <select class="form-control" id="{{i}}">
+                {% for member in member_list %}
+                    <option value="{{member}}">{{member}}</option>
+                {% endfor %}
+                </select>
+            </div>
+        {% endfor %}
+    </form>
+{% endblock %}

@@ -109,6 +109,12 @@ def tourney_show(request):
 
 def tourney_create(request):
     if request.session.get('member_id'):
+        return render(request, 'tourney/create.html')
+    else:
+        return HttpResponseRedirect('/') 
+
+def tourney_teams(request):
+    if request.session.get('member_id'):
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
         "X-API-Key": API_KEY,
@@ -117,15 +123,18 @@ def tourney_create(request):
         
         }
         info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
-        member_list = info.json()['Response']['results']
-        return render(request, 'tourney/create.html', { 'list': member_list })
-    else:
-        return HttpResponseRedirect('/') 
+        info_list = info.json()['Response']['results']
+        member_list = []
+        for member in info_list:
+            member_list.append(member['destinyUserInfo']['displayName'])
+        member_list.sort()
 
-def tourney_teams(request):
-    if request.session.get('member_id'):
-        numTeams = request.POST.get('numTeams')
-        return render(request, 'tourney/teams.html', {'numTeams': numTeams })
+        numTeams = int(request.GET.get('numTeams'))
+        num_range = range(numTeams)
+        print('what you want is below this line')
+        print(type(numTeams))
+        print(f'numteams is a {type(numTeams)} with the value: {numTeams}')
+        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list })
     else:
         return HttpResponseRedirect('/') 
 
