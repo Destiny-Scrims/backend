@@ -36,10 +36,9 @@ class Tournament(models.Model):
     numTeams = models.IntegerField()
     teams = models.ArrayField(
         model_container=Team,
-        model_form_class=TeamForm
-        
+        model_form_class=TeamForm       
         )
 
-    def __str__(self):
+    def __int__(self):
         return self.id 
 

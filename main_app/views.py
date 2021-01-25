@@ -107,7 +107,11 @@ def tourney_index(request):
     return render(request, 'tourney/index.html')
 
 def tourney_show(request, tourney_id):
-    return render(request, 'tourney/show.html')
+    if request.session.get('member_id'):
+        tournament_info = Tournament.objects.get(id=tourney_id)
+        return render(request, 'tourney/show.html', {'tournament_info': tournament_info})
+    else:
+        return HttpResponseRedirect('/') 
 
 def tourney_create(request):
     if request.session.get('member_id'):
@@ -168,11 +172,12 @@ def tourney_teams_set(request):
             member_id = member_id,
             numTeams = numTeams,
             teams = teams
-
         )
-        print(Tournament.objects.get)
-        tourney_id = 1
-        return HttpResponseRedirect('/tourney/' + str(tourney_id))
+        new_tournament_info = Tournament.objects.get(
+            teams = teams
+        )
+        print(new_tournament_info.id)
+        return HttpResponseRedirect('/tourney/' + str(new_tournament_info.id))
     else:
         return HttpResponseRedirect('/tourney/index') 
 
