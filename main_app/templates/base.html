@@ -15,6 +15,20 @@
             <img src="https://i.imgur.com/ooN7XzJ.png" alt="" width="50" height="50" class="d-inline-block align-top">
             Clan Scrims
           </a>
+          <div>
+            {% if displayName %}
+            <a class="navbar-brand" href="/profile">
+              | {{ displayName }} |
+            </a>
+            <a class="navbar-brand" href="/logout">
+              | Logout |
+            </a>
+            {% else %}
+            <a class="navbar-brand" href="/auth">
+              Authenticate with Bungie
+            </a>
+            {% endif %}
+          </div>
         </div>
       </nav>
     {% block content %}

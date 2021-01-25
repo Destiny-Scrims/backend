@@ -5,10 +5,7 @@ from django.contrib import sessions
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.forms import AuthenticationForm
 from uuid import uuid4
-import random
-import pprint
-import requests
-import datetime
+import random, pprint, requests, datetime
 from keys import client_id, client_secret, API_KEY, CHALLONGE_USERNAME, CHALLONGE_API_KEY
 from .models import User, Tournament, Team
 
@@ -18,9 +15,7 @@ pp = pprint.PrettyPrinter(indent=4)
 # Create your views here.
 
 AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&response_type=code'
-
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
-
 code = ''
 
 
@@ -90,10 +85,14 @@ def callback(request):
     request.session['displayName'] = displayName
     return HttpResponseRedirect('/')
 
-def access_session(request):
+def profile(request):
     if request.session.get('member_id'):
-        return HttpResponse(request.session.get('member_id'))
-
+        user_info = User.objects.get(
+            member_id = request.session.get('member_id')
+        )
+        return render(request, 'profile.html', { 'displayName': request.session.get('displayName'), 'user_info': user_info })
+    else:
+        return HttpResponseRedirect('/')
 
 def logout(request):
     try:
@@ -109,13 +108,13 @@ def tourney_index(request):
 def tourney_show(request, tourney_id):
     if request.session.get('member_id'):
         tournament_info = Tournament.objects.get(id=tourney_id)
-        return render(request, 'tourney/show.html', {'tournament_info': tournament_info})
+        return render(request, 'tourney/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
 def tourney_create(request):
     if request.session.get('member_id'):
-        return render(request, 'tourney/create.html')
+        return render(request, 'tourney/create.html', { 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
@@ -140,7 +139,7 @@ def tourney_teams(request):
         print('what you want is below this line')
         print(type(numTeams))
         print(f'numteams is a {type(numTeams)} with the value: {numTeams}')
-        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams })
+        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
