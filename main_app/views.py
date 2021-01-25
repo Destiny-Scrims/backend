@@ -166,7 +166,9 @@ def tourney_teams_set(request):
             print(team)
         Tournament.objects.create(
             member_id = member_id,
-            numTeams = numTeams
+            numTeams = numTeams,
+            teams = teams
+
         )
         print(Tournament.objects.get)
         tourney_id = 1
