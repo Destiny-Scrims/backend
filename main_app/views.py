@@ -112,3 +112,9 @@ def tourney_create(request):
         return render(request, 'tourney/create.html')
     else:
         return HttpResponseRedirect('/') 
+
+def tourney_teams(request):
+    if request.session.get('member_id'):
+        return render(request, 'tourney/teams.html')
+    else:
+        return HttpResponseRedirect('/') 

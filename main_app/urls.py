@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
     path('tourney/', views.tourney_index, name='tourney_index'),
     path('tourney/<int:tourney_id', views.tourney_show, name='tourney_show'),
-    path('tourney/create/', views.tourney_create, name='tourney_create')
+    path('tourney/create/', views.tourney_create, name='tourney_create'),
+    path('tourney/create/teams', views.tourney_teams, name='tourney_teams')
 ]
