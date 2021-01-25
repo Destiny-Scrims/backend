@@ -146,6 +146,7 @@ def tourney_teams_set(request):
         player_list = []
         for key, value in request.POST.items():
             player_list.append(value)
+        player_list = player_list[1:-1]
         print(player_list)
         Tournament.objects.create(
             member_id = member_id,
