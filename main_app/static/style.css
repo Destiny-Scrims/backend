@@ -40,3 +40,6 @@ footer {
 .form-control {
     max-width: 300px;    
 }
+.body {
+    padding-bottom: 30px;
+}
