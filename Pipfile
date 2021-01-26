@@ -5,6 +5,10 @@ name = "pypi"
 
 [packages]
 gunicorn = "*"
+django = "*"
+djongo = "*"
+python-dotenv = "*"
+whitenoise = "*"
 
 [dev-packages]
 
