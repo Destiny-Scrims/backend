@@ -35,12 +35,11 @@ footer {
   
 }
 .card {
-    height: 125px;
+    height: 200px;
     width: 200px;
     
 }
 
 .form-control {
-    max-width: 300px;
-    
+    max-width: 300px;    
 }
