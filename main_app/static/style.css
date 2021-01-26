@@ -26,18 +26,15 @@ footer {
 }
 
 .teams {
-    display: flex;
+    display: inline-flex;
     flex-flow: row wrap;
-    justify-content: space-evenly;
-    max-width: 250px;
-    max-height: 200px;
+    justify-content: space-between;
     padding: 20px;
-     
 }
+
 .card {
     height: 160px;
-    width: 200px;
-    
+    width: 200px;   
 }
 
 .form-control {
