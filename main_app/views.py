@@ -77,6 +77,7 @@ def callback(request):
     )   
     request.session['member_id'] = membership_id
     request.session['displayName'] = displayName
+    request.session['groupId'] = groupId
     return HttpResponseRedirect('/')
 
 def logout(request):
@@ -93,7 +94,15 @@ def profile(request):
         user_info = User.objects.get(
             member_id = request.session.get('member_id')
         )
-        return render(request, 'profile.html', { 'displayName': request.session.get('displayName'), 'user_info': user_info })
+        HEADERS = {
+        "Content-Type": 'application/x-www-form-urlencoded',
+        "X-API-Key": os.environ.get("API_KEY"),
+        "client_id": os.environ.get("client_id"),
+        "client_secret": os.environ.get("client_secret"),        
+        }
+        bungie_info = requests.get(f'https://www.bungie.net/Platform//User/GetBungieNetUserById/{request.session.get("member_id")}/', headers=HEADERS)
+        bungie_user_info = bungie_info.json()['Response']
+        return render(request, 'profile.html', { 'displayName': request.session.get('displayName'), 'user_info': user_info, 'bungie_user_info': bungie_user_info })
     else:
         return HttpResponseRedirect('/')
 
@@ -130,7 +139,7 @@ def tournament_create_teams(request):
         "client_secret": os.environ.get("client_secret"),        
         }
 
-        info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
+        info = requests.get(f'https://www.bungie.net/Platform/GroupV2/{request.session.get("groupId")}/Members/', headers=HEADERS)
         info_list = info.json()['Response']['results']
         member_list = []
 
@@ -213,7 +222,7 @@ def tournament_update_teams(request, tournament_id):
         "client_secret": os.environ.get("client_secret"),        
         }
 
-        info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
+        info = requests.get(f'https://www.bungie.net/Platform/GroupV2/{request.session.get("groupId")}/Members/', headers=HEADERS)
         info_list = info.json()['Response']['results']
         member_list = []
 
