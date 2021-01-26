@@ -3,13 +3,18 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib import sessions
 import random, requests, datetime
-from keys import client_id, client_secret, API_KEY
+
 from .models import User, Tournament, Team
+from dotenv import load_dotenv
+load_dotenv()
+import os
+
+
 
 # Constants
-AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&response_type=code'
+AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={os.environ.get("client_id")}&response_type=code'
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
-code = ''
+
 
 # Create your views here.
 
@@ -29,12 +34,12 @@ def callback(request):
 
     HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
-        "X-API-Key": API_KEY,
-        "client_id": client_id,
-        "client_secret": client_secret,
+        "X-API-Key": os.environ.get("API_KEY"),
+        "client_id": os.environ.get("client_id"),
+        "client_secret": os.environ.get("client_secret"),
         "grant_type": 'authorization_code',
         }
-    post_data = f'grant_type=authorization_code&code={code}&client_id={client_id}&client_secret={client_secret}'
+    post_data = f'grant_type=authorization_code&code={code}&client_id={os.environ.get("client_id")}&client_secret={os.environ.get("client_secret")}'
     response = requests.post(access_token_url, data=post_data, headers=HEADERS)
 
     access_token = response.json()['access_token']
@@ -120,9 +125,9 @@ def tournament_create_teams(request):
     if request.session.get('member_id'):
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
-        "X-API-Key": API_KEY,
-        "client_id": client_id,
-        "client_secret": client_secret,        
+        "X-API-Key": os.environ.get("API_KEY"),
+        "client_id": os.environ.get("client_id"),
+        "client_secret": os.environ.get("client_secret"),        
         }
 
         info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
@@ -203,9 +208,9 @@ def tournament_update_teams(request, tournament_id):
 
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
-        "X-API-Key": API_KEY,
-        "client_id": client_id,
-        "client_secret": client_secret,        
+        "X-API-Key": os.environ.get("API_KEY"),
+        "client_id": os.environ.get("client_id"),
+        "client_secret": os.environ.get("client_secret"),        
         }
 
         info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
