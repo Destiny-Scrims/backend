@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.forms import AuthenticationForm
 from uuid import uuid4
 import random, pprint, requests, datetime
-from keys import client_id, client_secret, API_KEY, CHALLONGE_USERNAME, CHALLONGE_API_KEY
+from keys import client_id, client_secret, API_KEY
 from .models import User, Tournament, Team
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -103,7 +103,13 @@ def logout(request):
     return HttpResponseRedirect('/') 
 
 def tourney_index(request):
-    return render(request, 'tourney/index.html')
+    if request.session.get('member_id'):
+        member_id = request.session.get('member_id')
+        tourneys = Tournament.objects.all()
+        return render(request, 'tourney/index.html', {'tourneys': tourneys, 'member_id': member_id, 'displayName':request.session.get('displayName')})
+    else:
+        return HttpResponseRedirect('/') 
+
 
 def tourney_show(request, tourney_id):
     if request.session.get('member_id'):

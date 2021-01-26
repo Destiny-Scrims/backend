@@ -11,10 +11,18 @@
 <body>
     <nav class="navbar navbar-dark" style="background-color: rgb(18, 23, 28);">
         <div class="container-fluid">
-          <a class="navbar-brand" href="/">
-            <img src="https://i.imgur.com/ooN7XzJ.png" alt="" width="50" height="50" class="d-inline-block align-top">
-            Clan Scrims
-          </a>
+          <div>
+            <a class="navbar-brand" href="/">
+              <img src="https://i.imgur.com/ooN7XzJ.png" alt="" width="50" height="50" class="">
+              Clan Scrims |
+            </a>
+            <a class="navbar-brand" href="/tourney/">
+              
+              | Tournament  |
+            </a>
+
+          </div>
+          
           <div>
             {% if displayName %}
             <a class="navbar-brand" href="/profile">
@@ -31,8 +39,11 @@
           </div>
         </div>
       </nav>
-    {% block content %}
-    {% endblock %}
+    <div class="content">
+      {% block content %}
+      {% endblock %}
+
+    </div>
 
     <footer style="background-color: rgb(18, 23, 28); color: white;">All Rights Reserved, Clan Scrims 2021</footer>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js" integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU" crossorigin="anonymous"></script>

@@ -3,11 +3,12 @@
     <h3>This is the tourney show page</h3>
     <h3>Number of teams competing: {{ tournament_info.numTeams}}</h3>
     {% for team in tournament_info.teams %}
+    
     <div class="teams">
-        
-        <div class="card">
+        <div class="card border-dark mb-3">
+            
             <div class="card-body">
-                
+            
                 <h5 class='card-text'>{{team.player1}}</h5>
                 <h5 class='card-text'>{{team.player2}}</h5>
                 <h5 class='card-text'>{{team.player3}}</h5>
