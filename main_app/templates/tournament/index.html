@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+    <a type="button" href='/tournament/create' class="btn btn-primary btn-lg btn-block">Create New Tournament</a>
+    <br>
+    {% for tournament in tournaments %}
+    {% if tournament.member_id == member_id %}
+    <br>
+    <a href="/tournament/{{tournament.id}}">{{tournament.date_created}}</a>
+    {% else %}
+    {% endif %}
+    {% endfor %}
+{% endblock %}

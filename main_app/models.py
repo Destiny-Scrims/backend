@@ -30,10 +30,10 @@ class TeamForm(forms.ModelForm):
             'player1', 'player2', 'player3'
         )
 
-
 class Tournament(models.Model):
     member_id = models.CharField(max_length=100)
     numTeams = models.IntegerField()
+    date_created = models.DateTimeField()
     teams = models.ArrayField(
         model_container=Team,
         model_form_class=TeamForm       

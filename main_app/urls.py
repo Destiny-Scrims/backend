@@ -7,10 +7,9 @@ urlpatterns = [
     path('callback/', views.callback, name='callback'),
     path('profile/', views.profile, name='profile'),
     path('logout', views.logout, name='logout'),
-    path('tourney/', views.tourney_index, name='tourney_index'),
-    path('tourney/<int:tourney_id>', views.tourney_show, name='tourney_show'),
-    path('tourney/create/', views.tourney_create, name='tourney_create'),
-    path('tourney/create/teams', views.tourney_teams, name='tourney_teams'),
-    path('tourney/create/teams/set', views.tourney_teams_set, name='tourney_teams_set'),
-
+    path('tournament/', views.tournament_index, name='tournament_index'),
+    path('tournament/<int:tournament_id>', views.tournament_show, name='tournament_show'),
+    path('tournament/create/', views.tournament_create, name='tournament_create'),
+    path('tournament/create/teams', views.tournament_teams, name='tournament_teams'),
+    path('tournament/create/teams/set', views.tournament_teams_set, name='tournament_teams_set'),
 ]

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h3>This is the tourney show page</h3>
-    <h3>Number of teams competing: {{ tournament_info.numTeams}}</h3>
+    <h3>This is the tournament show page</h3>
+    <h3>Number of teams competing: {{ tournament_info.numTeams }}</h3>
     {% for team in tournament_info.teams %}
     
     <div class="teams">

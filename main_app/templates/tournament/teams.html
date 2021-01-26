@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form action="/tourney/create/teams/set" method="POST">
+    <form action="/tournament/create/teams/set" method="POST">
         {% csrf_token %}
         <div class="form-group">
             {% for i in num_range %}

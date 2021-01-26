@@ -1,9 +1,0 @@
-{% extends 'base.html' %}
-{% block content %}
-    {% for tourney in tourneys %}
-    {% if tourney.member_id == member_id %}
-    <p>{{tourney.numTeams}}</p>
-    {% else %}
-    {% endif %}
-    {% endfor %}
-{% endblock %}

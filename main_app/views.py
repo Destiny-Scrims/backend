@@ -1,24 +1,19 @@
 from django.utils.http import urlencode
-from django.http import HttpResponseRedirect, HttpRequest, JsonResponse, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib import sessions
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.contrib.auth.forms import AuthenticationForm
-from uuid import uuid4
-import random, pprint, requests, datetime
+import random, requests, datetime
 from keys import client_id, client_secret, API_KEY
 from .models import User, Tournament, Team
 
-pp = pprint.PrettyPrinter(indent=4)
-
-
-# Create your views here.
-
+# Constants
 AUTH_URL = f'https://www.bungie.net/en/OAuth/Authorize?client_id={client_id}&response_type=code'
 access_token_url = 'https://www.bungie.net/platform/app/oauth/token/'
 code = ''
 
+# Create your views here.
 
+# Auth
 def index(request):
     if request.session.get('displayName'):
         displayName = request.session.get('displayName')
@@ -62,12 +57,6 @@ def callback(request):
     groupId = info.json()['Response']['results'][0]['group']['groupId']
     groupName = info.json()['Response']['results'][0]['group']['name']
 
-    # member_list = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
-
-    # pp.pprint(member_list.json())
-
-    print(expiry_date)
-
     User.objects.get_or_create(
         member_id = membership_id,
         defaults = {
@@ -85,6 +74,15 @@ def callback(request):
     request.session['displayName'] = displayName
     return HttpResponseRedirect('/')
 
+def logout(request):
+    try:
+        del request.session['member_id']
+        del request.session['displayName']
+    except KeyError:
+        pass
+    return HttpResponseRedirect('/') 
+
+# User
 def profile(request):
     if request.session.get('member_id'):
         user_info = User.objects.get(
@@ -94,62 +92,55 @@ def profile(request):
     else:
         return HttpResponseRedirect('/')
 
-def logout(request):
-    try:
-        del request.session['member_id']
-        del request.session['displayName']
-    except KeyError:
-        pass
-    return HttpResponseRedirect('/') 
-
-def tourney_index(request):
+# Tournament
+def tournament_index(request):
     if request.session.get('member_id'):
         member_id = request.session.get('member_id')
-        tourneys = Tournament.objects.all()
-        return render(request, 'tourney/index.html', {'tourneys': tourneys, 'member_id': member_id, 'displayName':request.session.get('displayName')})
+        tournaments = Tournament.objects.all()
+        return render(request, 'tournament/index.html', {'tournaments': tournaments, 'member_id': member_id, 'displayName':request.session.get('displayName')})
     else:
         return HttpResponseRedirect('/') 
 
 
-def tourney_show(request, tourney_id):
+def tournament_show(request, tournament_id):
     if request.session.get('member_id'):
-        tournament_info = Tournament.objects.get(id=tourney_id)
-        return render(request, 'tourney/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
+        tournament_info = Tournament.objects.get(id=tournament_id)
+        return render(request, 'tournament/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
-def tourney_create(request):
+def tournament_create(request):
     if request.session.get('member_id'):
-        return render(request, 'tourney/create.html', { 'displayName':request.session.get('displayName') })
+        return render(request, 'tournament/create.html', { 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
-def tourney_teams(request):
+def tournament_teams(request):
     if request.session.get('member_id'):
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
         "X-API-Key": API_KEY,
         "client_id": client_id,
-        "client_secret": client_secret,
-        
+        "client_secret": client_secret,        
         }
+
         info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
         info_list = info.json()['Response']['results']
         member_list = []
+
         for member in info_list:
             member_list.append(member['destinyUserInfo']['displayName'])
+            
         member_list.sort()
 
         numTeams = int(request.GET.get('numTeams'))
         num_range = range(numTeams*3)
-        print('what you want is below this line')
-        print(type(numTeams))
-        print(f'numteams is a {type(numTeams)} with the value: {numTeams}')
-        return render(request, 'tourney/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName') })
+        
+        return render(request, 'tournament/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
-def tourney_teams_set(request):
+def tournament_teams_set(request):
     if request.session.get('member_id'):
         member_id = request.session.get('member_id')
         
@@ -159,11 +150,14 @@ def tourney_teams_set(request):
             player_list.append(value)
         player_list = player_list[1:-1]
         random_player_list = []
+
         while len(player_list) > 0:
             random_index = random.randint(0, len(player_list)-1)
             random_player_list.append(player_list[random_index])
             player_list.pop(random_index)
+
         teams = []
+
         for i in range(numTeams):
             team = {
                 'player1': random_player_list[i*3],
@@ -171,17 +165,19 @@ def tourney_teams_set(request):
                 'player3': random_player_list[i*3+2]
             }
             teams.append(team)
-        for team in teams:
-            print(team)
+
         Tournament.objects.create(
             member_id = member_id,
             numTeams = numTeams,
-            teams = teams
+            teams = teams,
+            date_created = datetime.datetime.now()
         )
+
         new_tournament_info = Tournament.objects.get(
             teams = teams
         )
-        return HttpResponseRedirect('/tourney/' + str(new_tournament_info.id))
+
+        return HttpResponseRedirect('/tournament/' + str(new_tournament_info.id))
     else:
-        return HttpResponseRedirect('/tourney/index') 
+        return HttpResponseRedirect('/tournament/index') 
 
