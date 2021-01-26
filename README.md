@@ -31,6 +31,7 @@ An app that uses Bungie OAuth API to log in and accesses your clan list to creat
 | id | Interger | Auto-generated |
 | member_id | String | Must be provided |
 | numTeams | Interger | Must be provided / number of teams |
+| date_created | Date | Generated at create |
 | teams | Model | Must be provided / uses Team model |
 
 ### Team Model
@@ -91,12 +92,6 @@ def callback(request):
 
     groupId = info.json()['Response']['results'][0]['group']['groupId']
     groupName = info.json()['Response']['results'][0]['group']['name']
-
-    # member_list = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
-
-    # pp.pprint(member_list.json())
-
-    print(expiry_date)
 
     User.objects.get_or_create(
         member_id = membership_id,
