@@ -85,23 +85,23 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'destiny_scrims',
-           'CLIENT': {
-                'host': 'destiny-scrims-db01.wdm7y.mongodb.net',
-                # 'port': ,
-                'username': 'destiny',
-                'password': os.environ.get("atlas_password"),
-                'authSource': 'destiny_scrims',
-                'authMechanism': 'SCRAM-SHA-1'
+        'CLIENT': {
+            'host': 'destiny-scrims-db01.wdm7y.mongodb.net',
+            # 'port': ,
+            'username': 'destiny',
+            'password': os.environ.get("atlas_password"),
+            'authSource': 'destiny_scrims',
+            'authMechanism': 'SCRAM-SHA-1'
+        },
+        'LOGGING': {
+            'version': 1,
+            'loggers': {
+                'djongo': {
+                    'level': 'DEBUG',
+                    'propagate': False,                        
+                }
             },
-            'LOGGING': {
-                'version': 1,
-                'loggers': {
-                    'djongo': {
-                        'level': 'DEBUG',
-                        'propagate': False,                        
-                    }
-                },
-             },
+        },
     }
 }
 
