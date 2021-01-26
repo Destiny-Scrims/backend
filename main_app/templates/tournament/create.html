@@ -3,7 +3,11 @@
     <form action="/tournament/create/teams">
         {% csrf_token %}
         <label for="numTeams">Number of Teams</label>
-        <input type="number" value="" id='numTeams' name="numTeams">
+            <select class="form-control" id="numTeams" name="numTeams">
+                {% for i in num_range %}
+                    <option value="{{i}}">{{i}}</option>
+                {% endfor %}
+            </select>
         <input class="btn-primary btn" type="submit" value="Submit">
     </form>
 {% endblock %}

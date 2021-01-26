@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+    <form action="/tournament/update/teams/set/{{tournament_info.id}}" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            {% for i in num_range %}
+                <label for="player{{i}}">Player {{i}}</label>
+                <select class="form-control" id="{{i}}" name="team{{i}}_player0">
+                {% for member in member_list %}
+                    <option>{{member}}</option>
+                {% endfor %}
+                </select>
+            {% endfor %}
+        </div>
+        <input type="hidden" id='numTeams' name='numTeams' value='{{ numTeams }}'>
+        <input class="btn btn-primary" type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -111,11 +111,12 @@ def tournament_show(request, tournament_id):
 
 def tournament_create(request):
     if request.session.get('member_id'):
-        return render(request, 'tournament/create.html', { 'displayName':request.session.get('displayName') })
+        num_range = range(1,17)
+        return render(request, 'tournament/create.html', { 'displayName':request.session.get('displayName'), 'num_range':num_range })
     else:
         return HttpResponseRedirect('/') 
 
-def tournament_teams(request):
+def tournament_create_teams(request):
     if request.session.get('member_id'):
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -136,11 +137,11 @@ def tournament_teams(request):
         numTeams = int(request.GET.get('numTeams'))
         num_range = range(numTeams*3)
         
-        return render(request, 'tournament/teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName') })
+        return render(request, 'tournament/create_teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
 
-def tournament_teams_set(request):
+def tournament_create_teams_set(request):
     if request.session.get('member_id'):
         member_id = request.session.get('member_id')
         
@@ -187,3 +188,74 @@ def tournament_delete(request, tournament_id):
         return HttpResponseRedirect('/tournament')
     else:
         return HttpResponseRedirect('/')
+
+def tournament_update(request, tournament_id):
+    if request.session.get('member_id'):
+        num_range = range(1,17)
+        tournament_info = Tournament.objects.get(id=tournament_id)
+        return render(request, 'tournament/update.html', { 'displayName':request.session.get('displayName'), 'num_range':num_range, 'tournament_info': tournament_info })
+    else:
+        return HttpResponseRedirect('/')
+
+def tournament_update_teams(request, tournament_id):
+    if request.session.get('member_id'):
+        tournament_info = Tournament.objects.get(id=tournament_id)
+
+        HEADERS = {
+        "Content-Type": 'application/x-www-form-urlencoded',
+        "X-API-Key": API_KEY,
+        "client_id": client_id,
+        "client_secret": client_secret,        
+        }
+
+        info = requests.get('https://www.bungie.net/Platform/GroupV2/3697591/Members/', headers=HEADERS)
+        info_list = info.json()['Response']['results']
+        member_list = []
+
+        for member in info_list:
+            member_list.append(member['destinyUserInfo']['displayName'])
+            
+        member_list.sort()
+
+        numTeams = int(request.GET.get('numTeams'))
+        num_range = range(numTeams*3)
+        
+        return render(request, 'tournament/update_teams.html', {'num_range': num_range, 'member_list': member_list, 'numTeams': numTeams, 'displayName':request.session.get('displayName'), 'tournament_info':tournament_info })
+    else:
+        return HttpResponseRedirect('/') 
+
+def tournament_update_teams_set(request, tournament_id):
+    if request.session.get('member_id'):
+        member_id = request.session.get('member_id')
+        
+        numTeams = int(request.POST.get('numTeams'))
+        player_list = []
+        for key, value in request.POST.items():
+            player_list.append(value)
+        player_list = player_list[1:-1]
+        random_player_list = []
+
+        while len(player_list) > 0:
+            random_index = random.randint(0, len(player_list)-1)
+            random_player_list.append(player_list[random_index])
+            player_list.pop(random_index)
+
+        teams = []
+
+        for i in range(numTeams):
+            team = {
+                'player1': random_player_list[i*3],
+                'player2': random_player_list[i*3+1],
+                'player3': random_player_list[i*3+2]
+            }
+            teams.append(team)
+
+        Tournament.objects.filter(id=tournament_id).update(
+            numTeams = numTeams,
+            teams = teams,
+            date_created = datetime.datetime.now()
+        )
+
+        return HttpResponseRedirect('/tournament/' + str(tournament_id))
+    else:
+        return HttpResponseRedirect('/tournament/index')
