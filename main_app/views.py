@@ -179,5 +179,11 @@ def tournament_teams_set(request):
 
         return HttpResponseRedirect('/tournament/' + str(new_tournament_info.id))
     else:
-        return HttpResponseRedirect('/tournament/index') 
+        return HttpResponseRedirect('/tournament/index')
 
+def tournament_delete(request, tournament_id):
+    if request.session.get('member_id'):
+        Tournament.objects.filter(id=tournament_id).delete()
+        return HttpResponseRedirect('/tournament')
+    else:
+        return HttpResponseRedirect('/')
