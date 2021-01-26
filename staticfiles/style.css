@@ -1,0 +1,45 @@
+* {
+    /* background-color: rgb(18, 23, 28); */
+    /* color: white; */
+    
+}
+html, body {
+    /* background:rgb(18, 23, 28); */
+    /* background-size: cover; */
+}
+
+h2 {
+    /* color: aquamarine; */
+    /* background:  rgb(18, 23, 28); */
+}
+
+.content {
+    padding: 10px 0 0 20px;
+}
+footer {
+    background: rgb(18, 23, 28);
+    color: white;
+    position: fixed;
+    text-align: center;
+    bottom: 0;
+    width: 100%
+}
+
+.teams {
+    display: inline-flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.card {
+    height: 160px;
+    width: 200px;   
+}
+
+.form-control {
+    max-width: 300px;    
+}
+.body {
+    padding-bottom: 30px;
+}
