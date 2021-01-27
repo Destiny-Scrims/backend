@@ -118,7 +118,7 @@ def tournament_index(request):
 
 def tournament_show(request, tournament_id):
     if request.session.get('member_id'):
-        tournament_info = Tournament.objects.get(tournament_id=tournament_id)
+        tournament_info = Tournament.objects.get(id=tournament_id)
         return render(request, 'tournament/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
@@ -191,14 +191,15 @@ def tournament_create_teams_set(request):
         new_tournament_info = Tournament.objects.get(
             teams = teams
         )
+        print(new_tournament_info.tournament_id)
 
-        return HttpResponseRedirect('/tournament/' + str(new_tournament_info.id))
+        return HttpResponseRedirect('/')
     else:
         return HttpResponseRedirect('/tournament/index')
 
 def tournament_delete(request, tournament_id):
     if request.session.get('member_id'):
-        Tournament.objects.filter(tournament_id=tournament_id).delete()
+        Tournament.objects.filter(id=tournament_id).delete()
         return HttpResponseRedirect('/tournament')
     else:
         return HttpResponseRedirect('/')
@@ -206,14 +207,14 @@ def tournament_delete(request, tournament_id):
 def tournament_update(request, tournament_id):
     if request.session.get('member_id'):
         num_range = range(4,17)
-        tournament_info = Tournament.objects.get(tournament_id=tournament_id)
+        tournament_info = Tournament.objects.get(id=tournament_id)
         return render(request, 'tournament/update.html', { 'displayName':request.session.get('displayName'), 'num_range':num_range, 'tournament_info': tournament_info })
     else:
         return HttpResponseRedirect('/')
 
 def tournament_update_teams(request, tournament_id):
     if request.session.get('member_id'):
-        tournament_info = Tournament.objects.get(tournament_id=tournament_id)
+        tournament_info = Tournament.objects.get(id=tournament_id)
 
         HEADERS = {
         "Content-Type": 'application/x-www-form-urlencoded',
@@ -264,7 +265,7 @@ def tournament_update_teams_set(request, tournament_id):
             }
             teams.append(team)
 
-        Tournament.objects.filter(tournament_id=tournament_id).update(
+        Tournament.objects.filter(id=tournament_id).update(
             numTeams = numTeams,
             teams = teams,
             date_created = datetime.datetime.now()

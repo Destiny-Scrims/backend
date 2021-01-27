@@ -5,7 +5,7 @@
     {% for tournament in tournaments %}
     {% if tournament.member_id == member_id %}
     <br>
-    <a href="/tournament/{{tournament.tournament_id}}">{{tournament.date_created}}</a>
+    <a href="/tournament/{{tournament._id}}">{{tournament.date_created}}</a>
     {% else %}
     {% endif %}
     {% endfor %}
