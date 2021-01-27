@@ -118,7 +118,7 @@ def tournament_index(request):
 
 def tournament_show(request, tournament_id):
     if request.session.get('member_id'):
-        tournament_info = Tournament.objects.get(id=tournament_id)
+        tournament_info = Tournament.objects.get(tournament_id=tournament_id)
         return render(request, 'tournament/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
