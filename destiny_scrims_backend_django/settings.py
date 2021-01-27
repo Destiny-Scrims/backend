@@ -30,7 +30,8 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET")
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    '.heroku.com'
+    # '.heroku.com'
+    # 'localhost'
 ]
 
 
@@ -87,11 +88,11 @@ DATABASES = {
         'NAME': 'destiny_scrims',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'destiny-scrims-db01.wdm7y.mongodb.net',
+            'host': 'mongodb+srv://destiny:<password>@destiny-scrims-db01.wdm7y.mongodb.net/<dbname>?retryWrites=true&w=majority',
             'port': 27017,
             'username': 'destiny',
-            'password': os.environ.get("atlas_password"),
-            # 'authSource': 'destiny_scrims',
+            'password': 'MyDestiny2Backend',
+            'authSource': 'destiny_scrims',
             'authMechanism': 'SCRAM-SHA-1'
         },
         'LOGGING': {
