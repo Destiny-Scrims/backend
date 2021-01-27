@@ -42,7 +42,7 @@ def callback(request):
     post_data = f'grant_type=authorization_code&code={code}&client_id={os.environ.get("client_id")}&client_secret={os.environ.get("client_secret")}'
     response = requests.post(access_token_url, data=post_data, headers=HEADERS)
     print(response.json())
-    access_token = response.json()['access_token']
+    access_token = response.access_token
     expires_in = response.json()['expires_in']
     refresh_token = response.json()['refresh_token']
     membership_id = response.json()['membership_id']
