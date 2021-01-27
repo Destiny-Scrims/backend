@@ -10,6 +10,7 @@ djongo = "*"
 python-dotenv = "*"
 whitenoise = "*"
 requests = "*"
+dnspython = "*"
 
 [dev-packages]
 
