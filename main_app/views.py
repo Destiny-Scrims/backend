@@ -41,8 +41,8 @@ def callback(request):
         }
     post_data = f'grant_type=authorization_code&code={code}&client_id={os.environ.get("client_id")}&client_secret={os.environ.get("client_secret")}'
     response = requests.post(access_token_url, data=post_data, headers=HEADERS)
-    print(response.json())
-    access_token = response.access_token
+
+    access_token = response.json()['access_token']
     expires_in = response.json()['expires_in']
     refresh_token = response.json()['refresh_token']
     membership_id = response.json()['membership_id']
@@ -118,7 +118,7 @@ def tournament_index(request):
 
 def tournament_show(request, tournament_id):
     if request.session.get('member_id'):
-        tournament_info = Tournament.objects.get(tournament_id=tournament_id)
+        tournament_info = Tournament.objects.get(id=tournament_id)
         return render(request, 'tournament/show.html', { 'tournament_info': tournament_info, 'displayName':request.session.get('displayName') })
     else:
         return HttpResponseRedirect('/') 
@@ -191,9 +191,8 @@ def tournament_create_teams_set(request):
         new_tournament_info = Tournament.objects.get(
             teams = teams
         )
-        print(new_tournament_info.tournament_id)
 
-        return HttpResponseRedirect('/')
+        return HttpResponseRedirect('/tournament/' + str(new_tournament_info.id))
     else:
         return HttpResponseRedirect('/tournament/index')
 

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-    <form action="/tournament/update/teams/{{tournament_info._id}}">
+    <form action="/tournament/update/teams/{{tournament_info.id}}">
         {% csrf_token %}
         <label for="numTeams">Number of Teams</label>
             <select class="form-control" id="numTeams" name="numTeams" value="{{tournament_info.numTeams}}">
