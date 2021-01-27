@@ -39,6 +39,7 @@ footer {
 }
 
 .form-control {
+    margin: 0 auto;
     max-width: 300px;    
 }
 .body {

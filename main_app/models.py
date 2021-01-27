@@ -31,6 +31,7 @@ class TeamForm(forms.ModelForm):
         )
 
 class Tournament(models.Model):
+    tournament_id = models.AutoField(primary_key=True)
     member_id = models.CharField(max_length=100)
     numTeams = models.IntegerField()
     date_created = models.DateTimeField()
